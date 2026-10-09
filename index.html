@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alberto Carro Novo · Research notes</title>
+<meta name="description" content="Three research projects from the IAAC MaCAD master (2022–23), revisited in 2026, each with a small interactive tool.">
+<meta property="og:title" content="Alberto Carro Novo · Research notes">
+<meta property="og:type" content="website">
+<meta property="og:description" content="Three research projects from the IAAC MaCAD master (2022–23), revisited in 2026, each with a small interactive tool.">
+<meta property="og:image" content="og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="author" content="Alberto Carro Novo">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600&display=swap">
+<style>
+/* Notas de investigación. Cada nota es una fila de láminas apoyadas sobre una línea de suelo,
+   que se recorre de izquierda a derecha en el orden del proceso, y una maqueta para probar la idea.
+   Página en blanco: los blancos de los dibujos se funden con ella, todos comparten el mismo papel. */
+:root {
+  --ground: #ffffff;
+  --ink: #262625;
+  --text: #555552;
+  --muted: #666663;
+  --claim: #7a7a76;
+  --line: #c9c9c5;
+  --faint: #b9b9b5;
+  --sans: "Helvetica Neue", "Inter Tight", Helvetica, Arial, sans-serif;
+  --fs-display: clamp(30px, 4.4vw, 68px);
+  --fs-title: clamp(22px, 2vw, 30px);
+  --fs-text: 15px;
+  --fs-small: 13px;
+  --gutter: clamp(16px, 4vw, 64px);
+  --plate-h: clamp(220px, min(58vh, 62vw), 620px);
+  --plate-w: min(84vw, 1240px);
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font: 300 var(--fs-text)/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; text-decoration-color: var(--line); }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+h1, h2, p, ol, figure { margin: 0; }
+ol { padding: 0; list-style: none; }
+button, select, input { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
+.wrap { padding-inline: var(--gutter); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Cabecera común */
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 24px; padding-bottom: 14px; font-size: var(--fs-text); }
+.top .who { color: var(--ink); text-decoration: none; }
+.top .when { color: var(--muted); }
+
+/* Portada: lista de notas */
+.intro { padding-block: clamp(28px, 6vh, 72px) clamp(36px, 6vh, 72px); }
+.intro h1 { max-width: 21ch; color: var(--ink); font-weight: 300; font-size: var(--fs-display); line-height: 1.04; letter-spacing: -.025em; text-wrap: balance; }
+.intro .lead { max-width: 60ch; margin-top: clamp(20px, 3vh, 32px); }
+.entries { padding-bottom: clamp(56px, 10vh, 120px); }
+.entries li { border-top: 1px solid var(--line); }
+.entries li:last-child { border-bottom: 1px solid var(--line); }
+.entries a {
+  display: grid; grid-template-columns: 2.5rem minmax(0, 2.4fr) minmax(0, 1.2fr) 7rem 128px;
+  gap: clamp(12px, 2vw, 32px); align-items: start;
+  padding-block: 18px; color: var(--muted); text-decoration: none;
+}
+.e-text { display: flex; flex-direction: column; gap: 4px; }
+.e-q { color: var(--ink); font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; font-weight: 300; max-width: 24ch; margin-bottom: 6px; }
+.e-title { color: var(--ink); font-size: var(--fs-small); letter-spacing: .02em; }
+.e-claim { max-width: 46ch; }
+.e-meta, .e-part { font-size: var(--fs-small); line-height: 1.45; }
+.e-part em { display: none; font-style: normal; }
+.e-thumb { width: 128px; height: 90px; object-fit: contain; object-position: right top; mix-blend-mode: multiply; }
+.entries a:hover .e-q { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+.entries [data-published="false"] a { pointer-events: none; }
+.entries [data-published="false"] .e-q, .entries [data-published="false"] .e-title, .entries [data-published="false"] .e-claim { color: var(--muted); }
+.entries [data-published="false"] .e-part em { display: block; color: var(--ink); }
+.entries [data-published="false"] .e-thumb { opacity: .35; }
+
+/* Nota */
+.crumbs { display: flex; justify-content: space-between; gap: 16px; padding-top: clamp(16px, 4vh, 40px); color: var(--muted); font-size: var(--fs-small); }
+.p-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); align-items: start; padding-top: clamp(20px, 4vh, 48px); }
+.p-id { display: flex; flex-direction: column; }
+.p-id .num { color: var(--faint); font-size: var(--fs-title); line-height: 1.15; }
+.p-id h1 { color: var(--ink); font-weight: 300; font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; }
+.p-id .meta { margin-top: 10px; color: var(--muted); font-size: var(--fs-small); }
+.claim { max-width: 19ch; color: var(--claim); font-size: var(--fs-display); line-height: 1.04; letter-spacing: -.025em; text-wrap: balance; }
+
+/* La mesa: fila de láminas sobre una línea de suelo */
+.rail { margin-top: clamp(28px, 6vh, 72px); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; }
+.rail::-webkit-scrollbar { display: none; }
+.rail.is-dragging { cursor: grabbing; }
+.rail.is-dragging img { pointer-events: none; }
+.track {
+  display: flex; gap: clamp(20px, 3.4vw, 60px); width: max-content;
+  padding-inline: var(--gutter);
+  background: linear-gradient(var(--line), var(--line)) 0 var(--plate-h) / 100% 1px no-repeat;
+}
+.plate { flex: none; display: grid; grid-template-rows: var(--plate-h) auto; min-width: 10.5rem; }
+.plate button { align-self: end; justify-self: start; display: block; cursor: zoom-in; }
+.plate img {
+  display: block;
+  height: min(var(--plate-h), calc(var(--plate-w) * var(--h) / var(--w)));
+  width: auto; max-width: none;
+  aspect-ratio: var(--w) / var(--h);
+  mix-blend-mode: multiply;
+}
+.plate.photo img { mix-blend-mode: normal; }
+.plate figcaption { width: 0; min-width: 100%; display: flex; gap: 10px; padding-top: 10px; color: var(--muted); font-size: var(--fs-small); line-height: 1.4; }
+.plate figcaption b { flex: none; font-weight: 300; color: var(--ink); font-variant-numeric: tabular-nums; }
+.plate figcaption i { font-style: normal; color: var(--ink); }
+.ctrl { display: flex; justify-content: flex-end; align-items: center; gap: 18px; padding-top: 14px; color: var(--muted); font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
+.ctrl button { padding: 6px 4px; color: var(--ink); }
+.ctrl button:disabled { color: var(--faint); cursor: default; }
+
+/* Texto bajo la mesa */
+.p-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); padding-block: clamp(20px, 4vh, 40px) clamp(48px, 9vh, 104px); }
+.p-body .cols { grid-column: 2; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px clamp(16px, 3vw, 56px); max-width: 1100px; }
+.p-body .cols > * { min-width: 0; }
+.credits { color: var(--muted); font-size: var(--fs-small); }
+.credits span { display: block; }
+.links { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin-top: 14px; }
+
+/* Pruébalo: la maqueta */
+.tool { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); row-gap: 16px; padding-block: clamp(40px, 8vh, 96px); border-top: 1px solid var(--line); }
+.tool > * { grid-column: 2; min-width: 0; }
+.tool-head { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); margin-bottom: 8px; }
+.tool-head .num { grid-row: 1 / span 2; color: var(--muted); font-size: var(--fs-small); padding-top: .55em; }
+.tool-head h2 { color: var(--ink); font-weight: 300; font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; }
+.tool-head p { grid-column: 2; max-width: 60ch; margin-top: 8px; }
+.tool-frame { position: relative; grid-column: 1 / -1; margin-inline: calc(var(--gutter) * -1); }
+.tool-canvas { display: block; width: 100%; height: clamp(320px, 64vh, 660px); cursor: grab; }
+.tool-canvas.is-dragging { cursor: grabbing; }
+.tool-canvas:focus-visible { outline-offset: -4px; }
+.tool-labels span { position: absolute; left: 0; top: 0; padding: 2px 6px; background: var(--ground); color: var(--ink); font-size: 12px; line-height: 1.3; white-space: nowrap; pointer-events: none; }
+.tool-ctrl { display: flex; flex-wrap: wrap; align-items: end; gap: 16px clamp(20px, 3vw, 40px); }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 12rem; color: var(--muted); font-size: var(--fs-small); }
+.field output { color: var(--ink); font-variant-numeric: tabular-nums; }
+.field input[type="range"] { width: min(18rem, 100%); accent-color: var(--ink); margin: 0; }
+.field select { appearance: none; border: 0; border-bottom: 1px solid var(--ink); border-radius: 0; background: transparent; padding: 4px 22px 4px 0; color: var(--ink); cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: right 7px center, right 2px center; background-size: 5px 5px; background-repeat: no-repeat; }
+.btn { border: 1px solid var(--ink); padding: 7px 14px; color: var(--ink); font-size: var(--fs-small); }
+.btn:hover { background: var(--ink); color: var(--ground); }
+.tool-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px clamp(16px, 3vw, 40px); max-width: 860px; }
+.tool-stats div { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; border-top: 1px solid var(--line); font-size: var(--fs-small); color: var(--muted); }
+.tool-stats b { font-weight: 300; color: var(--ink); font-variant-numeric: tabular-nums; font-size: var(--fs-text); }
+.tool-read { color: var(--ink); font-variant-numeric: tabular-nums; }
+.tool-note { max-width: 70ch; color: var(--muted); font-size: var(--fs-small); }
+
+/* Entre notas */
+.post-nav { display: flex; justify-content: space-between; gap: 24px; padding-block: 24px 56px; border-top: 1px solid var(--line); }
+.post-nav a { display: flex; flex-direction: column; gap: 2px; text-decoration: none; color: var(--ink); font-size: var(--fs-title); line-height: 1.2; }
+.post-nav a span { color: var(--muted); font-size: var(--fs-small); }
+.post-nav .next { text-align: right; }
+.post-nav a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+.post-nav a[hidden] { display: none; }
+
+/* Pie */
+.foot { padding-block: 24px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: var(--fs-small); }
+.foot p { max-width: 72ch; }
+
+/* Lámina ampliada */
+dialog.zoom { width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--ground); color: var(--text); }
+dialog.zoom::backdrop { background: var(--ground); }
+.zoom-in { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; padding: 16px var(--gutter) 20px; gap: 12px; }
+.zoom-bar { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; color: var(--muted); font-size: var(--fs-small); }
+.zoom-bar button, .zoom-nav button { color: var(--ink); padding: 6px 4px; }
+.zoom-stage { position: relative; min-height: 0; overflow: hidden; cursor: zoom-out; }
+.zoom-stage img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: contain; mix-blend-mode: multiply; }
+.zoom-stage img.photo { mix-blend-mode: normal; }
+.zoom-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; font-size: var(--fs-small); color: var(--muted); }
+.zoom-foot p b { font-weight: 300; color: var(--ink); margin-right: 10px; font-variant-numeric: tabular-nums; }
+.zoom-foot p i { font-style: normal; color: var(--ink); }
+.zoom-nav { flex: none; display: flex; gap: 18px; }
+
+/* Volver: un botón redondo con flecha */
+.back { padding-top: clamp(16px, 3vh, 28px); }
+.back-btn { display: inline-grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--ink); border-radius: 50%; color: var(--ink); text-decoration: none; transition: background .2s ease, color .2s ease; }
+.back-btn:hover { background: var(--ink); color: var(--ground); }
+.back-btn svg { transition: transform .2s ease; }
+.back-btn:hover svg { transform: translateX(-3px); }
+
+/* Cabecera de nota: frase, entrada y botón a la herramienta */
+.p-claim { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(16px, 3vh, 28px); }
+.p-lead { max-width: 52ch; color: var(--ink); font-size: clamp(17px, 1.4vw, 20px); line-height: 1.45; }
+.cta { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; background: var(--ink); color: var(--ground); font-size: var(--fs-text); letter-spacing: .01em; }
+.cta:hover { background: #000; }
+.cta span { display: inline-block; transition: transform .2s ease; }
+.cta:hover span { transform: translateY(2px); }
+.e-part small { display: block; font-size: var(--fs-small); color: var(--ink); }
+.entries [data-published="false"] .e-part small { display: none; }
+
+/* Capítulos de la nota, a la manera de una ficha de investigación */
+.chapter { padding-top: clamp(48px, 9vh, 104px); }
+.ch-text { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); }
+.ch-text h2 { color: var(--ink); font-weight: 300; font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; }
+.ch-body { display: flex; flex-direction: column; gap: 12px; max-width: 62ch; }
+.chapter .rail { margin-top: clamp(24px, 4vh, 48px); }
+.facts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); padding-block: clamp(56px, 10vh, 112px) clamp(48px, 9vh, 96px); }
+.facts dl { grid-column: 2; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px clamp(16px, 3vw, 40px); max-width: 1100px; }
+.facts dl div { padding-top: 8px; border-top: 1px solid var(--line); }
+.facts dt { color: var(--muted); font-size: var(--fs-small); }
+.facts dd { margin: 2px 0 0; color: var(--ink); }
+.facts .links { grid-column: 2; margin-top: 24px; }
+.tool { background: linear-gradient(var(--line), var(--line)) top / 100% 1px no-repeat; }
+.tool-head h2 { font-size: var(--fs-display); line-height: 1.04; letter-spacing: -.025em; }
+
+@media (max-width: 860px) {
+  .ch-text, .facts { grid-template-columns: minmax(0, 1fr); row-gap: 12px; }
+  .facts dl, .facts .links { grid-column: 1; grid-template-columns: minmax(0, 1fr); }
+  .p-head, .p-body, .tool, .tool-head { grid-template-columns: minmax(0, 1fr); row-gap: 16px; }
+  .p-body .cols { grid-column: 1; grid-template-columns: minmax(0, 1fr); max-width: 60ch; }
+  .tool > *, .tool-head p { grid-column: 1; }
+  .tool-head .num { grid-row: auto; padding-top: 0; }
+  .tool-stats { grid-template-columns: minmax(0, 1fr); }
+  .entries a { grid-template-columns: 2rem minmax(0, 1fr) 88px; row-gap: 6px; }
+  .e-text { grid-column: 2; grid-row: 1; }
+  .e-meta { grid-column: 2; grid-row: 2; }
+  .e-part { grid-column: 2; grid-row: 3; }
+  .e-thumb { grid-column: 3; grid-row: 1 / span 3; width: 88px; height: 70px; }
+}
+
+.p-q { color: var(--claim); font-size: var(--fs-text); letter-spacing: .01em; margin-bottom: calc(-1 * clamp(8px, 2vh, 18px)); }
+
+.seg { display: inline-flex; border: 1px solid var(--ink); }
+.seg button { padding: 7px 14px; color: var(--ink); font-size: var(--fs-small); }
+.seg button + button { border-left: 1px solid var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--ground); }
+.seg button:not([aria-pressed="true"]):hover { background: rgba(38,38,37,.08); }
+
+.sw { display: inline-block; width: 10px; height: 10px; margin-right: 7px; vertical-align: -1px; }
+.ctrl-col { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+.e-thumb[src$="ease-01-madrid.webp"] { mix-blend-mode: normal; }
+.tool-read:empty { display: none; }
+
+/* SYneRgism: a tall model beside the zone plan, the sun map and the readout.
+   Buttons sit on the top of the model, the coverage slider on its bottom. */
+.tool[data-tool="synergism"] { --hdl: #ec6b5f; --map-w: clamp(150px, 13vw, 200px); --map-h: calc(var(--map-w) * 2.8); }
+.tool-over { position: absolute; top: 14px; left: max(var(--gutter), 14px); right: max(var(--gutter), 14px); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; pointer-events: none; z-index: 2; }
+.tool-over .seg { pointer-events: auto; background: var(--ground); }
+.tool-under { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 2; width: min(340px, calc(100% - 28px));
+  display: flex; flex-direction: column; align-items: center; gap: 0; padding: 6px 14px 4px; background: rgba(255, 255, 255, .92); border: 1px solid var(--ink); color: var(--ink); font-size: var(--fs-small); text-align: center; }
+.tool-under output { font-variant-numeric: tabular-nums; }
+.tool-under input[type="range"] { width: 100%; height: 24px; margin: 0; accent-color: var(--ink); touch-action: pan-y; }
+.tool[data-tool="synergism"] .tool-side { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.tool[data-tool="synergism"] .tool-ctrl { display: block; }
+.syn-pair { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 28px; }
+.prog-field, .mini-field { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; color: var(--ink); font-size: var(--fs-small); text-align: center; }
+.prog { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.prog-plan { position: relative; width: var(--map-w); height: var(--map-h); margin-inline: 14px; border: 1.5px solid var(--ink); }
+.prog-plan .band { position: absolute; padding: 0; border: 0; box-shadow: inset -1px 0 rgba(255, 255, 255, .55); cursor: pointer; transition: filter .15s; }
+.prog-plan .band:hover { filter: brightness(1.12); outline: 1px solid var(--ink); outline-offset: -1px; }
+.prog-plan .band:focus-visible { z-index: 1; outline: 2px solid var(--hdl); outline-offset: -2px; }
+.prog-bridge { position: absolute; left: -16px; right: -16px; z-index: 2; min-height: 6px; cursor: grab; touch-action: none; }
+.prog-bridge::before { content: ""; position: absolute; inset: 0 16px; background: #f6dedb; border-block: 1px solid var(--hdl); }
+.bh-bar { position: absolute; left: 8px; right: 8px; top: 50%; height: 2px; margin-top: -1px; background: var(--hdl); }
+.bh { position: absolute; top: 50%; width: 16px; height: 16px; margin-top: -8px; padding: 0; border: 0; border-radius: 50%; background: var(--hdl); cursor: grab; touch-action: none; transition: transform .15s; }
+.bh::after { content: ""; position: absolute; inset: -12px; border-radius: 50%; }
+.bh-w { left: 0; }
+.bh-e { right: 0; }
+.bh:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.prog-bridge:hover .bh, .prog-plan.is-dragging .bh { transform: scale(1.2); }
+.prog-plan.is-dragging, .prog-plan.is-dragging * { cursor: grabbing; }
+.prog-field, .mini-field { width: calc(var(--map-w) + 28px); }
+.prog-key { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; margin: 0; padding: 0; list-style: none; color: var(--ink); font-size: var(--fs-small); }
+.mini { display: block; width: var(--map-w); height: var(--map-h); border: 1.5px solid var(--ink); }
+.tool[data-tool="synergism"] .tool-stats { display: flex; flex-direction: column; gap: 26px; min-width: 210px; max-width: none; padding-top: 28px; }
+.tool[data-tool="synergism"] .tool-stats div { display: flex; flex-direction: column; gap: 3px; padding-top: 10px; border-top: 1px solid var(--line); }
+.tool[data-tool="synergism"] .tool-stats span { color: var(--muted); font-size: var(--fs-text); }
+.tool[data-tool="synergism"] .tool-stats b { color: var(--ink); font-weight: 600; font-size: clamp(24px, 2.2vw, 32px); line-height: 1.12; letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tool[data-tool="synergism"] .tool-note { max-width: 52ch; }
+
+/* Model across the page, tall; zones, sun map and readout below it in the text column. */
+.tool[data-tool="synergism"] .tool-canvas { height: clamp(620px, 92vh, 1000px); }
+.tool[data-tool="synergism"] .tool-side { padding-top: 28px; }
+@media (max-width: 860px) {
+  .tool[data-tool="synergism"] { --map-w: min(140px, 34vw); --map-h: 380px; }
+  .tool[data-tool="synergism"] .lg { display: none; }
+  .tool[data-tool="synergism"] .tool-over .seg button { padding: 9px 14px; }
+  .tool[data-tool="synergism"] .tool-canvas { height: clamp(440px, 74vh, 780px); height: clamp(440px, 74svh, 780px); }
+  .tool[data-tool="synergism"] .tool-side { padding-top: 8px; }
+  .syn-pair { justify-content: center; gap: 24px 8px; }
+  .prog-plan { margin-inline: 18px; }
+  .prog-field > span, .mini-field > span { display: flex; align-items: flex-end; justify-content: center; min-height: 2.9em; line-height: 1.4; }
+  .tool[data-tool="synergism"] .tool-stats { flex: 1 1 100%; gap: 0; padding-top: 0; }
+  .tool[data-tool="synergism"] .tool-stats div { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; align-items: baseline; padding-block: 10px; }
+  .tool[data-tool="synergism"] .tool-stats span { grid-column: 1 / -1; }
+  .tool[data-tool="synergism"] .tool-stats span { font-size: var(--fs-small); }
+  .tool[data-tool="synergism"] .tool-stats b { font-size: 22px; }
+}
+.sw-dash { display: inline-block; width: 18px; height: 0; margin-right: 7px; vertical-align: 3px; border-top: 2px dashed var(--ink); }
+
+</style>
+</head>
+<body>
+<main>
+<section class="home" data-view="" data-title="IAAC research notes">
+  <div class="intro wrap">
+    <h1>Computation lets us ask questions that a single drawing cannot answer.</h1>
+    <p class="lead">I am reopening the three research projects from the IAAC Master in Advanced Computation for Architecture and Design (2022–23) and putting them to the test in 2026. One note per project, each with its plates and a small tool to try the idea.</p>
+  </div>
+  <ol class="entries wrap">
+    <li data-published="true"><a href="#synergism">
+      <span class="num">01</span>
+      <span class="e-text"><span class="e-q">Can a void connect a city?</span><span class="e-title">SYneRgism</span><span class="e-claim">A mediating tool at the urban scale.</span></span>
+      <span class="e-meta">Damascus · 2022–23<br>Market, courtyards and timber structure</span>
+      <span class="e-part">Part 1<small>With 3D tool</small><em>Coming soon</em></span>
+      <img class="e-thumb" src="img/syn-12-mercado.webp" alt="" loading="lazy">
+    </a></li>
+    <li data-published="false"><a href="#ease">
+      <span class="num">02</span>
+      <span class="e-text"><span class="e-q">What does one trip tell us about the next?</span><span class="e-title">EASE</span><span class="e-claim">The everyday city is drawn by coming back.</span></span>
+      <span class="e-meta">Madrid · 2023<br>Mobility, graphs and routes</span>
+      <span class="e-part">Part 2<small>With 3D tool</small><em>Coming soon</em></span>
+      <img class="e-thumb" src="img/ease-01-madrid.webp" alt="" loading="lazy">
+    </a></li>
+    <li data-published="false"><a href="#latent-studio">
+      <span class="num">03</span>
+      <span class="e-text"><span class="e-q">What space hides between two forms?</span><span class="e-title">Latent Studio</span><span class="e-claim">Between two known forms lies a field of possibilities.</span></span>
+      <span class="e-meta">Barcelona · 2023<br>3D generative network · Thesis</span>
+      <span class="e-part">Part 3<small>With 3D tool</small><em>Coming soon</em></span>
+      <img class="e-thumb" src="img/lat-03-interpolacion.webp" alt="" loading="lazy">
+    </a></li>
+  </ol>
+</section>
+<!-- ───────────── 01 SYneRgism ───────────── -->
+<article class="post" data-view="synergism" data-title="SYneRgism · Research notes" hidden>
+  <div class="back wrap"><a class="back-btn" href="#" aria-label="Back to all notes"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <header class="p-head wrap">
+    <div class="p-id">
+      <span class="num" aria-hidden="true">01</span>
+      <h1>SYneRgism</h1>
+      <p class="meta">Damascus · 2022–23<br>ACESD Studio, MaCAD</p>
+    </div>
+    <div class="p-claim">
+      <p class="p-q">Can a void connect a city?</p>
+      <p class="claim">A mediating tool at the urban scale.</p>
+      <p class="p-lead">SYneRgism brings building system, climate and urban fabric into a single computational process, and tests it in the void of the former Hejaz station in Damascus.</p>
+      <button type="button" class="cta" data-goto="tool-synergism">Try the 3D tool <span aria-hidden="true">↓</span></button>
+    </div>
+  </header>
+  <section class="chapter">
+  <div class="ch-text wrap"><h2>Context</h2><div class="ch-body"><p>Damascus grew westward from its agricultural land in the east. The Hejaz station split the city in two, new and old; what remains today is the ticket building and an excavated plot.</p><p>The project occupies that void with a market that brings producers and consumers together: a green square with shared spaces between the two edges.</p></div></div>
+  <div class="rail-block">
+  <div class="rail" tabindex="0" role="region" aria-label="Plates: Context">
+    <div class="track">
+        <figure class="plate photo" style="--w:1800;--h:1273"><button type="button"><img src="img/syn-01-implantacion.webp" width="1800" height="1273" alt="Aerial view of Damascus in greys with the market, in colour, inserted in a long strip" loading="lazy"></button><figcaption><b>01.1</b><span><i>Site.</i> The market occupies the Hejaz void, a strip between two cities.</span></figcaption></figure>
+        <figure class="plate" style="--w:1800;--h:1273"><button type="button"><img src="img/syn-02-dos-ciudades.webp" width="1800" height="1273" alt="Black and white collage: the new city on the left, the old city on the right and the plot circled" loading="lazy"></button><figcaption><b>01.2</b><span><i>Reading.</i> The railway station separated the new city from the old. The plot sits on the seam.</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 02</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
+  </div>
+  </section>
+  <section class="chapter">
+  <div class="ch-text wrap"><h2>Type and climate</h2><div class="ch-body"><p>In the arid climate of Damascus, the courtyard works as a temperature regulator. The study classifies the units the city is built with and compares courtyard geometries, square, rectangular, triangular and irregular, by their thermal behaviour.</p><p>The trench is read the same way: the void is one more module in the composition.</p></div></div>
+  <div class="rail-block">
+  <div class="rail" tabindex="0" role="region" aria-label="Plates: Type and climate">
+    <div class="track">
+        <figure class="plate" style="--w:1800;--h:1092"><button type="button"><img src="img/syn-03-clasificacion.webp" width="1800" height="1092" alt="Five Damascene unit types drawn in axonometric, plan and section" loading="lazy"></button><figcaption><b>01.3</b><span><i>Type.</i> Dome, beit, riwaq, liwan and courtyard: the units the city is built with.</span></figcaption></figure>
+        <figure class="plate photo" style="--w:1800;--h:1273"><button type="button"><img src="img/syn-04-patios-clima.webp" width="1800" height="1273" alt="Courtyard shapes in black on an orange temperature background" loading="lazy"></button><figcaption><b>01.4</b><span><i>Climate.</i> Courtyard shapes compared by thermal comfort. The void regulates temperature.</span></figcaption></figure>
+        <figure class="plate photo" style="--w:1800;--h:1146"><button type="button"><img src="img/syn-04b-vacio-modulo.webp" width="1800" height="1146" alt="View of the trench with the neighbouring volumes coloured by temperature, from orange to green" loading="lazy"></button><figcaption><b>01.5</b><span><i>The void as module.</i> The trench, analysed thermally, enters the composition as one more piece.</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 03</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
+  </div>
+  </section>
+  <section class="chapter">
+  <div class="ch-text wrap"><h2>Forming the massing</h2><div class="ch-body"><p>The idea that organises the project is the formation of the massing through climatic computational rules. The plot is subdivided and, on that grid, an algorithm distributes solid and void: it generates hundreds of options in a density matrix and filters them by programme, experience and climate.</p><p>The options that pass the filter are studied at module scale with thermal comfort analysis. The massing comes out of those rules, and the tool at the end of this note lets you play with its logic.</p></div></div>
+  <div class="rail-block">
+  <div class="rail" tabindex="0" role="region" aria-label="Plates: Forming the massing">
+    <div class="track">
+        <figure class="plate" style="--w:1740;--h:1253"><button type="button"><img src="img/syn-05-variantes.webp" width="1740" height="1253" alt="Matrix of hundreds of solid–void distributions; some highlighted in black" loading="lazy"></button><figcaption><b>01.6</b><span><i>Variants.</i> Hundreds of solid–void distributions along the strip. In black, those that pass the density filter.</span></figcaption></figure>
+        <figure class="plate" style="--w:365;--h:1300"><button type="button"><picture><source srcset="img/syn-06-opciones-still.webp" media="(prefers-reduced-motion: reduce)"><img src="img/syn-06-opciones.webp" width="365" height="1300" alt="Plan of the market changing from one option to another" loading="lazy"></picture></button><figcaption><b>01.7</b><span><i>Options.</i> The plan, from one variant to the next.</span></figcaption></figure>
+        <figure class="plate" style="--w:1800;--h:1103"><button type="button"><img src="img/syn-06c-micro-perspectiva.webp" width="1800" height="1103" alt="Twelve perspectives of the trench with different massing distributions in orange" loading="lazy"></button><figcaption><b>01.8</b><span><i>Macro dissection.</i> The selected variants seen in the trench: the massing changes with each rule.</span></figcaption></figure>
+        <figure class="plate photo" style="--w:1800;--h:1273"><button type="button"><img src="img/syn-06b-diseccion-micro.webp" width="1800" height="1273" alt="Ten plans of the market coloured by thermal comfort, with their colour scale" loading="lazy"></button><figcaption><b>01.9</b><span><i>Micro dissection.</i> Ten massing variants evaluated with thermal comfort analysis.</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 04</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
+  </div>
+  </section>
+  <section class="chapter">
+  <div class="ch-text wrap"><h2>Building system</h2><div class="ch-body"><p>The structure is an optimised timber grid. The module is sized together with the grid, and parts and joints are tested to tie construction, programme and public space together.</p></div></div>
+  <div class="rail-block">
+  <div class="rail" tabindex="0" role="region" aria-label="Plates: Building system">
+    <div class="track">
+        <figure class="plate" style="--w:1524;--h:1173"><button type="button"><img src="img/syn-07-estructura.webp" width="1524" height="1173" alt="Axonometric of the trench with the timber structure in orange and a joint detail" loading="lazy"></button><figcaption><b>01.10</b><span><i>Structure.</i> A timber grid inside the trench.</span></figcaption></figure>
+        <figure class="plate" style="--w:1528;--h:1177"><button type="button"><img src="img/syn-08a-estructura-secundaria.webp" width="1528" height="1177" alt="Axonometric of the trench with the secondary timber structure and a joint detail" loading="lazy"></button><figcaption><b>01.11</b><span><i>Secondary structure.</i> On the grid, a second, lighter structure for roofs and walkways.</span></figcaption></figure>
+        <figure class="plate" style="--w:1529;--h:1177"><button type="button"><img src="img/syn-08b-forjados.webp" width="1529" height="1177" alt="Axonometric of the trench with the timber slabs in orange at several levels" loading="lazy"></button><figcaption><b>01.12</b><span><i>Slabs.</i> Timber platforms at different heights: terraces, walkways and shade.</span></figcaption></figure>
+        <figure class="plate" style="--w:1447;--h:1087"><button type="button"><img src="img/syn-08-uniones.webp" width="1447" height="1087" alt="Exploded view of the structural module with the dimensions of its parts and joints" loading="lazy"></button><figcaption><b>01.13</b><span><i>Module.</i> Parts and joints, sized together with the grid.</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 04</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
+  </div>
+  </section>
+  <section class="chapter">
+  <div class="ch-text wrap"><h2>The market</h2><div class="ch-body"><p>The market sinks into the trench above all to protect itself from the Syrian sun: below street level, the walls and the timber structure give shade during the hottest hours. The programme is laid out in bands: entrances, stored market, temporal market and green shared spaces. The section brings these decisions together: going down into the market, crossing it and restoring continuity between its edges.</p></div></div>
+  <div class="rail-block">
+  <div class="rail" tabindex="0" role="region" aria-label="Plates: The market">
+    <div class="track">
+        <figure class="plate" style="--w:1560;--h:1324"><button type="button"><img src="img/syn-12a-programa.webp" width="1560" height="1324" alt="Occupation plan: bands of stored market in black, temporal market in orange and green spaces in blue" loading="lazy"></button><figcaption><b>01.14</b><span><i>Occupation.</i> Entrances, stored market, temporal market and green shared spaces.</span></figcaption></figure>
+        <figure class="plate" style="--w:1908;--h:529"><button type="button"><img src="img/syn-09-seccion-transversal.webp" width="1908" height="529" alt="Cross section of the market in the trench, with the station behind" loading="lazy"></button><figcaption><b>01.15</b><span><i>Cross section.</i> Going down into the market to escape the sun, and crossing it.</span></figcaption></figure>
+        <figure class="plate" style="--w:1912;--h:338"><button type="button"><img src="img/syn-10-seccion-longitudinal.webp" width="1912" height="338" alt="Long section of the market along the trench" loading="lazy"></button><figcaption><b>01.16</b><span><i>Long section.</i> Courtyards, walkways and terraces between the two edges.</span></figcaption></figure>
+        <figure class="plate" style="--w:494;--h:1178"><button type="button"><img src="img/syn-11-axonometria.webp" width="494" height="1178" alt="Exploded axonometric with the layers of the project" loading="lazy"></button><figcaption><b>01.17</b><span><i>Layers.</i> Ground, structure, slabs and roofs.</span></figcaption></figure>
+        <figure class="plate" style="--w:1529;--h:1179"><button type="button"><img src="img/syn-12b-puestos.webp" width="1529" height="1179" alt="Axonometric of the trench with the market stalls in orange and three stall modules" loading="lazy"></button><figcaption><b>01.18</b><span><i>Stalls.</i> Timber modules for the market, mounted on the same grid.</span></figcaption></figure>
+        <figure class="plate" style="--w:1531;--h:1183"><button type="button"><img src="img/syn-12c-vegetacion.webp" width="1531" height="1183" alt="Five tree species drawn in circles above the axonometric of the trench with the trees in orange" loading="lazy"></button><figcaption><b>01.19</b><span><i>Vegetation.</i> Species that grow in Damascus: stone pine, black pine, Cilician fir, cypress and chestnut. More shade at market level.</span></figcaption></figure>
+        <figure class="plate" style="--w:1800;--h:1248"><button type="button"><img src="img/syn-12d-mobiliario.webp" width="1800" height="1248" alt="Six combinations of tree, planter and timber benches, with their plans" loading="lazy"></button><figcaption><b>01.20</b><span><i>Shade and seating.</i> Tree, planter and bench in one module, in six combinations.</span></figcaption></figure>
+        <figure class="plate photo" style="--w:1800;--h:1273"><button type="button"><img src="img/syn-12-mercado.webp" width="1800" height="1273" alt="Render of the market with timber stalls, trees and people shopping" loading="lazy"></button><figcaption><b>01.21</b><span><i>Market.</i> Producers and residents on the same ground.</span></figcaption></figure>
+        <figure class="plate photo" style="--w:1800;--h:1273"><button type="button"><img src="img/syn-13-lo-que-queda.webp" width="1800" height="1273" alt="Render from the timber terraces towards the historic station building" loading="lazy"></button><figcaption><b>01.22</b><span><i>What remains.</i> From the terraces, the station in the background.</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 09</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
+  </div>
+  </section>
+  <div class="facts wrap"><dl><div><dt>Year</dt><dd>2022–23</dd></div><div><dt>Place</dt><dd>Damascus, Syria</dd></div><div><dt>Programme</dt><dd>IAAC, MaCAD · ACESD Studio</dd></div><div><dt>Team</dt><dd>Jana Semaan, Raghad Hammour and Alberto Carro Novo</dd></div><div><dt>Faculty</dt><dd>Rodrigo Aguirre, Irene Martin and Amanda Gioia</dd></div><div><dt>My role</dt><dd>Programming and organising the formation of the massing through climatic computational rules</dd></div></dl><nav class="links" aria-label="Links for SYneRgism"><a href="https://blog.iaac.net/synergism/" target="_blank" rel="noopener noreferrer">Full project on IAAC Blog ↗</a></nav></div>
+  <section class="tool wrap" data-tool="synergism" data-src="data/syn-context.json" aria-labelledby="tool-synergism">
+    <div class="tool-head">
+      <span class="num">01 · Try it</span>
+      <h2 id="tool-synergism">Sun and shade in Al Hejaz market</h2>
+      <p>Where does the city already shade the market? Choose a morning or an afternoon market: the platforms rise where the surrounding buildings shade the trench during its opening hours. Tap the zones to change them and drag the bridges.</p>
+    </div>
+    <div class="tool-frame">
+      <canvas class="tool-canvas" tabindex="0" role="img" aria-label="3D model of the trench with bridges, platforms, market tables and trees. Use the arrow keys to rotate."></canvas>
+      <div class="tool-over">
+        <div class="seg" role="group" aria-label="View"><button type="button" data-view-mode="boxes" aria-pressed="true">Box<span class="lg"> view</span></button><button type="button" data-view-mode="structure" aria-pressed="false">Structure<span class="lg"> view</span></button></div>
+        <div class="seg" role="group" aria-label="Optimize for"><button type="button" data-opt="am" aria-pressed="false">Morning<span class="lg"> market</span></button><button type="button" data-opt="pm" aria-pressed="true">Afternoon<span class="lg"> market</span></button></div>
+      </div>
+      <label class="tool-under cover-field"><span>Shaded area covered by market <output data-output="cover">100 %</output></span><input type="range" data-input="cover" min="10" max="100" step="5" value="100"></label>
+    </div>
+    <div class="tool-side"><div class="tool-ctrl">
+      <div class="syn-pair">
+        <div class="field prog-field"><span>Zones<br>drag the bridges</span><div class="prog" data-prog></div></div>
+        <div class="field mini-field"><span data-mini-key>July 25th · 11–17<br>white = more sun</span><canvas class="mini" data-mini role="img" aria-label="Sun-hour map of the plot with the market on it, north at the top"></canvas><ul class="prog-key"><li><i class="sw-dash"></i>Market limit</li></ul></div>
+        <div class="tool-stats" data-stats aria-live="polite"></div>
+      </div>
+    </div>
+    
+    <p class="tool-read" data-read aria-live="polite"></p>
+    <p class="tool-note">Sun hours for 25 July, the hottest day in the Damascus weather file, sampled every 15 minutes on the trench floor. Grid of 25 × 111 cells and four layers of 1.94 m. A simplified reconstruction of the project’s Grasshopper logic.</p></div>
+  </section>
+  <nav class="post-nav wrap" aria-label="Other notes"><span></span><a class="next" href="#ease"><span>Part 2 →</span>EASE</a></nav>
+</article>
+<!-- ───────────── 02 EASE ───────────── -->
+<article class="post" data-view="ease" data-title="EASE · Research notes" hidden>
+  <div class="back wrap"><a class="back-btn" href="#" aria-label="Back to all notes"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <header class="p-head wrap">
+    <div class="p-id">
+      <span class="num" aria-hidden="true">02</span>
+      <h1>EASE</h1>
+      <p class="meta">Madrid · 2023<br>Graph Machine Learning, MaCAD</p>
+    </div>
+    <div class="p-claim">
+      <p class="p-q">What does one trip tell us about the next?</p>
+      <p class="claim">The everyday city is drawn by coming back.</p>
+      
+      <button type="button" class="cta" data-goto="tool-ease">Try the 3D tool <span aria-hidden="true">↓</span></button>
+    </div>
+  </header>
+  <div class="rail-block">
+  <div class="rail" tabindex="0" role="region" aria-label="Plates of EASE, in process order">
+    <div class="track">
+        <figure class="plate photo" style="--w:1795;--h:1607"><button type="button"><img src="img/ease-01-madrid.webp" width="1795" height="1607" alt="Map of Madrid in white with its streets and the habitual trips in red" loading="lazy"></button><figcaption><b>02.1</b><span><i>Use.</i> Everyday trips across Madrid.</span></figcaption></figure>
+        <figure class="plate" style="--w:1800;--h:815"><button type="button"><img src="img/ease-02-grafo.webp" width="1800" height="815" alt="Graph of red lines connecting places" loading="lazy"></button><figcaption><b>02.2</b><span><i>Graph.</i> The same trips read as a network of places and relations.</span></figcaption></figure>
+        <figure class="plate" style="--w:1800;--h:1013"><button type="button"><img src="img/ease-03-metodo.webp" width="1800" height="1013" alt="Diagram: Takeout, OpenStreetMap and preferences feed feasible routes and testable explanations" loading="lazy"></button><figcaption><b>02.3</b><span><i>Method.</i> From data to proposal: Takeout, OpenStreetMap and preferences.</span></figcaption></figure>
+        <figure class="plate" style="--w:1800;--h:1013"><button type="button"><img src="img/ease-04-resultados.webp" width="1800" height="1013" alt="Two accuracy bars: 29.0 % for global frequency and 39.2 % for Markov" loading="lazy"></button><figcaption><b>02.4</b><span><i>Result.</i> Next destination: Markov gets 39.2 % right, against 29.0 % for global frequency.</span></figcaption></figure>
+        <figure class="plate" style="--w:1600;--h:900"><button type="button"><img src="img/ease-05-rutas-2026.webp" width="1600" height="900" alt="Three panels: the shortest route, the preference route and the segments they share" loading="lazy"></button><figcaption><b>02.5</b><span><i>2026 · Routes.</i> The shortest route against a preference route. Data © OpenStreetMap contributors, ODbL.</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 05</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
+  </div>
+  <div class="p-body wrap">
+    <div class="cols">
+      <p>EASE studies how a sequence of trips can be read as a network of places, times and recurring relations. Maps and graphs make it possible to explore the structure of those habits and to propose models of next destinations.</p><p>Predictive capacity remains a hypothesis that needs independent validation. The architectural interest lies in observing the city through use, alongside its physical form, while keeping explicit the limits of what the data can tell.</p>
+      <div>
+        <p class="credits"><span>Ahmed Faizal and Alberto Carro Novo.</span><span>Faculty: David Andres Leon and Dai Kandil.</span></p>
+        <nav class="links" aria-label="Links for EASE"><a href="https://vertiseguros.github.io/ease-research-publication/" target="_blank" rel="noopener noreferrer">Route comparator · 2026 ↗</a><a href="https://blog.iaac.net/ease-guide/" target="_blank" rel="noopener noreferrer">Original project on IAAC Blog ↗</a></nav>
+      </div>
+    </div>
+  </div>
+  <section class="tool wrap" data-tool="ease" data-src="data/ease-routes.json" aria-labelledby="tool-ease">
+    <div class="tool-head">
+      <span class="num">02 · Try it</span>
+      <h2 id="tool-ease">Two criteria, one city</h2>
+      <p>From Puerta del Sol, the shortest route runs on the ground and the one your weights choose floats above it. Change the destination, the weight of shops or the detour you accept; drag the map to rotate it.</p>
+    </div>
+    <div class="tool-frame">
+      <canvas class="tool-canvas" tabindex="0" role="img" aria-label="Street network of central Madrid with two routes from Sol. Use the arrow keys to rotate."></canvas>
+      <div class="tool-labels" aria-hidden="true"><span data-label="a"></span><span data-label="b"></span></div>
+    </div>
+    <div class="tool-ctrl">
+      <label class="field"><span>Destination</span><select data-input="dest"></select></label>
+      <label class="field"><span data-output="weight">Shops 65 % · less traffic 35 %</span><input type="range" data-input="weight" min="0" max="100" step="5" value="65"></label>
+      <label class="field"><span>Maximum detour</span><select data-input="extra"><option value="5">5 min extra</option><option value="10">10 min extra</option><option value="20" selected>20 min extra</option><option value="30">30 min extra</option></select></label>
+    </div>
+    <div class="tool-stats" data-stats></div>
+    <p class="tool-read" data-read aria-live="polite"></p>
+    <p class="tool-note">Streets © OpenStreetMap contributors, ODbL 1.0 (October 2026 extract). Candidate routes are precomputed; the weights are explicit, not learned, and there is no personal data. Walking time at 4.5 km/h.</p>
+  </section>
+  <nav class="post-nav wrap" aria-label="Other notes"><a class="prev" href="#synergism"><span>← Part 1</span>SYneRgism</a></nav>
+</article>
+<!-- ───────────── 03 Latent Studio ───────────── -->
+<article class="post" data-view="latent-studio" data-title="Latent Studio · Research notes" hidden>
+  <div class="back wrap"><a class="back-btn" href="#" aria-label="Back to all notes"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <header class="p-head wrap">
+    <div class="p-id">
+      <span class="num" aria-hidden="true">03</span>
+      <h1>Latent Studio</h1>
+      <p class="meta">Barcelona · 2023<br>Final thesis, MaCAD</p>
+    </div>
+    <div class="p-claim">
+      <p class="p-q">What space hides between two forms?</p>
+      <p class="claim">Between two known forms lies a field of possibilities.</p>
+      
+      <button type="button" class="cta" data-goto="tool-latent-studio">Try the 3D tool <span aria-hidden="true">↓</span></button>
+    </div>
+  </header>
+  <div class="rail-block">
+  <div class="rail" tabindex="0" role="region" aria-label="Plates of Latent Studio, in process order">
+    <div class="track">
+        <figure class="plate" style="--w:948;--h:816"><button type="button"><img src="img/lat-01-voxel.webp" width="948" height="816" alt="Architectural volume drawn as a voxel mesh" loading="lazy"></button><figcaption><b>03.1</b><span><i>Data.</i> Each building becomes a voxel volume.</span></figcaption></figure>
+        <figure class="plate" style="--w:822;--h:815"><button type="button"><img src="img/lat-02-espacio-latente.webp" width="822" height="815" alt="Cloud of coloured points grouped in families" loading="lazy"></button><figcaption><b>03.2</b><span><i>Latent space.</i> The network orders forms by similarity. Each colour is a family.</span></figcaption></figure>
+        <figure class="plate" style="--w:1304;--h:1219"><button type="button"><img src="img/lat-03-interpolacion.webp" width="1304" height="1219" alt="Axonometric matrix of volumes changing gradually from one form to another" loading="lazy"></button><figcaption><b>03.3</b><span><i>Interpolation.</i> Walking the transition from some forms to others.</span></figcaption></figure>
+        <figure class="plate" style="--w:1579;--h:1800"><button type="button"><img src="img/lat-04-catalogo.webp" width="1579" height="1800" alt="Catalogue of dozens of generated volumes" loading="lazy"></button><figcaption><b>03.4</b><span><i>Catalogue.</i> Generated forms, to compare before choosing.</span></figcaption></figure>
+        <figure class="plate" style="--w:1800;--h:893"><button type="button"><img src="img/lat-05-white-clay.webp" width="1800" height="893" alt="Screenshot of the White Clay viewer: a volume halfway between two forms, in a white urban setting" loading="lazy"></button><figcaption><b>03.5</b><span><i>2026 · White Clay.</i> The online viewer: the same transition, now in context.</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 05</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
+  </div>
+  <div class="p-body wrap">
+    <div class="cols">
+      <p>Latent Studio explores the territory between two known forms: a catalogue of architectural volumes that lets you walk the transitions from one configuration to another. The research trains a 3D generative network on voxelised models and makes its latent space visible.</p><p>What matters is the moment before choosing a solution: recognising families, discovering variations and deciding what deserves to be developed. The catalogue widens the field of testing; architectural judgement guides the choice.</p>
+      <div>
+        <p class="credits"><span>Alberto Carro Novo.</span><span>Thesis supervisor: Oana Taut.</span></p>
+        <nav class="links" aria-label="Links for Latent Studio"><a href="https://vertiseguros.github.io/Latent-Studio/" target="_blank" rel="noopener noreferrer">Explore in 3D · White Clay ↗</a><a href="https://blog.iaac.net/latent-studio/" target="_blank" rel="noopener noreferrer">Thesis on IAAC Blog ↗</a></nav>
+      </div>
+    </div>
+  </div>
+  <section class="tool wrap" data-tool="latent-studio" aria-labelledby="tool-latent-studio">
+    <div class="tool-head">
+      <span class="num">03 · Try it</span>
+      <h2 id="tool-latent-studio">Between two forms</h2>
+      <p>Choose two volumes and walk the transition between them, voxel by voxel. Drag the model to rotate it.</p>
+    </div>
+    <div class="tool-frame">
+      <canvas class="tool-canvas" tabindex="0" role="img" aria-label="Volume of white voxels changing between two forms. Use the arrow keys to rotate."></canvas>
+      
+    </div>
+    <div class="tool-ctrl">
+      <label class="field"><span>Form A</span><select data-input="a"></select></label>
+      <label class="field"><span>Form B</span><select data-input="b"></select></label>
+      <label class="field"><span><output data-output="t">t = 0.40</output></span><input type="range" data-input="t" min="0" max="100" step="1" value="40"></label>
+      <button type="button" class="btn" data-act="play">Play</button>
+    </div>
+    
+    <p class="tool-read" data-read aria-live="polite"></p>
+    <p class="tool-note">The thesis trained a 3D generative network on voxelised models and walked its latent space. Here the transition is a linear blend between two distance fields: it shows the idea, not the network.</p>
+  </section>
+  <nav class="post-nav wrap" aria-label="Other notes"><a class="prev" href="#ease"><span>← Part 2</span>EASE</a></nav>
+</article>
+</main>
+<footer class="foot wrap">
+  <div class="top"><a class="who" href="#">Alberto Carro Novo</a><span class="when">Master research · IAAC MaCAD 2022–23</span></div>
+  <p>Academic projects developed at IAAC, Master in Advanced Computation for Architecture and Design (MaCAD), 2022–23. Images belong to the original projects; full credits on IAAC Blog.</p>
+</footer>
+
+<dialog class="zoom" aria-label="Enlarged plate">
+  <div class="zoom-in">
+    <div class="zoom-bar"><span class="zoom-title"></span><button type="button" class="zoom-close">Close ×</button></div>
+    <div class="zoom-stage"><img alt=""></div>
+    <div class="zoom-foot"><p class="zoom-cap"></p><div class="zoom-nav"><button type="button" data-step="-1" aria-label="Previous plate">←</button><button type="button" data-step="1" aria-label="Next plate">→</button></div></div>
+  </div>
+</dialog>
+<script src="js/stage.js"></script>
+<script src="js/tool-synergism.js"></script>
+<script src="js/tool-ease.js"></script>
+<script src="js/tool-latent.js"></script>
+<script src="js/blog.js"></script>
+</body>
+</html>
