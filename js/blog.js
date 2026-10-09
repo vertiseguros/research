@@ -1,7 +1,10 @@
 /* Notas de investigación: una página, varias vistas.
    #synergism, #ease y #latent-studio abren cada entrada; sin almohadilla se ve la portada.
-   Las entradas sin publicar (data-published="false") no salen en la portada, pero su enlace funciona. */
+   Las entradas sin publicar (data-published="false") no salen en la portada, pero su enlace funciona.
+   Con ONLY puesto se ve solo esa nota: sin portada, sin las demás, y la flecha de volver no hace nada.
+   Para recuperar la portada, dejar ONLY = ''. */
 (function () {
+  var ONLY = 'synergism';
   var THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };
   var views = Array.prototype.slice.call(document.querySelectorAll('[data-view]'));
@@ -35,6 +38,7 @@
   /* ── Vistas ────────────────────────────────────────────────── */
   function show() {
     var id = location.hash.replace('#', '');
+    if (ONLY) id = ONLY;
     var target = views.filter(function (v) { return v.dataset.view === id; })[0] || views[0];
     views.forEach(function (v) { v.hidden = v !== target; });
     document.title = target.dataset.title || document.title;
@@ -43,6 +47,9 @@
     if (target.querySelector('.tool')) startTool(target);
   }
   window.addEventListener('hashchange', show);
+  if (ONLY) document.querySelectorAll('a[href="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); });
+  });
 
   /* Los enlaces entre notas que apuntan a entradas sin publicar se ocultan */
   document.querySelectorAll('.entries [data-published="false"] a').forEach(function (a) {
