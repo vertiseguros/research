@@ -21,19 +21,22 @@
    Página en blanco: los blancos de los dibujos se funden con ella, todos comparten el mismo papel. */
 :root {
   --ground: #ffffff;
-  --ink: #262625;
-  --text: #555552;
-  --muted: #666663;
-  --claim: #7a7a76;
-  --line: #c9c9c5;
+  --ink: #202020;
+  --text: #4c4c4c;
+  --muted: #686868;
+  --claim: var(--ink);
+  --line: #d6d6d2;
   --faint: #b9b9b5;
   --sans: "Helvetica Neue", "Inter Tight", Helvetica, Arial, sans-serif;
-  --fs-display: clamp(30px, 4.4vw, 68px);
-  --fs-title: clamp(22px, 2vw, 30px);
+  --serif: Georgia, "Times New Roman", serif;
+  --fs-display: clamp(34px, 4.6vw, 70px);
+  --fs-title: clamp(24px, 2.4vw, 28px);
+  --fs-lead: clamp(18px, 1.6vw, 22px);
   --fs-text: 15px;
   --fs-small: 13px;
   --gutter: clamp(16px, 4vw, 64px);
-  --plate-h: clamp(220px, min(58vh, 62vw), 620px);
+  --header-h: 72px;
+  --plate-h: clamp(260px, min(72vh, 64vw), 820px);
   --plate-w: min(84vw, 1240px);
   color-scheme: light;
 }
@@ -42,7 +45,7 @@ body {
   margin: 0;
   background: var(--ground);
   color: var(--text);
-  font: 300 var(--fs-text)/1.55 var(--sans);
+  font: 400 var(--fs-text)/1.65 var(--sans);
   -webkit-font-smoothing: antialiased;
 }
 a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; text-decoration-color: var(--line); }
@@ -57,13 +60,13 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
 
 /* Cabecera común */
 .top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 24px; padding-bottom: 14px; font-size: var(--fs-text); }
-.top .who { color: var(--ink); text-decoration: none; }
+.top .who { color: var(--ink); font-weight: 600; text-decoration: none; }
 .top .when { color: var(--muted); }
 
 /* Portada: lista de notas */
 .intro { padding-block: clamp(28px, 6vh, 72px) clamp(36px, 6vh, 72px); }
-.intro h1 { max-width: 21ch; color: var(--ink); font-weight: 300; font-size: var(--fs-display); line-height: 1.04; letter-spacing: -.025em; text-wrap: balance; }
-.intro .lead { max-width: 60ch; margin-top: clamp(20px, 3vh, 32px); }
+.intro h1 { max-width: 21ch; color: var(--ink); font-weight: 400; font-size: var(--fs-display); line-height: 1.04; letter-spacing: -.025em; text-wrap: balance; }
+.intro .lead { max-width: 56ch; margin-top: clamp(20px, 3vh, 32px); font: 400 var(--fs-lead)/1.5 var(--serif); }
 .entries { padding-bottom: clamp(56px, 10vh, 120px); }
 .entries li { border-top: 1px solid var(--line); }
 .entries li:last-child { border-bottom: 1px solid var(--line); }
@@ -73,8 +76,8 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
   padding-block: 18px; color: var(--muted); text-decoration: none;
 }
 .e-text { display: flex; flex-direction: column; gap: 4px; }
-.e-q { color: var(--ink); font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; font-weight: 300; max-width: 24ch; margin-bottom: 6px; }
-.e-title { color: var(--ink); font-size: var(--fs-small); letter-spacing: .02em; }
+.e-q { color: var(--ink); font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; font-weight: 400; max-width: 24ch; margin-bottom: 6px; }
+.e-title { color: var(--ink); font-size: var(--fs-small); font-weight: 600; letter-spacing: .02em; }
 .e-claim { max-width: 46ch; }
 .e-meta, .e-part { font-size: var(--fs-small); line-height: 1.45; }
 .e-part em { display: none; font-style: normal; }
@@ -89,22 +92,22 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
 .crumbs { display: flex; justify-content: space-between; gap: 16px; padding-top: clamp(16px, 4vh, 40px); color: var(--muted); font-size: var(--fs-small); }
 .p-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); align-items: start; padding-top: clamp(20px, 4vh, 48px); }
 .p-id { display: flex; flex-direction: column; }
-.p-id .num { color: var(--faint); font-size: var(--fs-title); line-height: 1.15; }
-.p-id h1 { color: var(--ink); font-weight: 300; font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; }
+.p-id .num { color: var(--muted); font-size: var(--fs-small); line-height: 1.5; margin-bottom: 8px; }
+.p-id h1 { color: var(--ink); font-weight: 600; font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.025em; }
 .p-id .meta { margin-top: 10px; color: var(--muted); font-size: var(--fs-small); }
-.claim { max-width: 19ch; color: var(--claim); font-size: var(--fs-display); line-height: 1.04; letter-spacing: -.025em; text-wrap: balance; }
+.claim { max-width: 19ch; color: var(--claim); font-weight: 400; font-size: var(--fs-display); line-height: 1.04; letter-spacing: -.035em; text-wrap: balance; }
 
 /* La mesa: fila de láminas sobre una línea de suelo */
-.rail { margin-top: clamp(28px, 6vh, 72px); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; }
+.rail { margin-top: clamp(28px, 6vh, 72px); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter); cursor: grab; }
 .rail::-webkit-scrollbar { display: none; }
-.rail.is-dragging { cursor: grabbing; }
+.rail.is-dragging { cursor: grabbing; scroll-snap-type: none; }
 .rail.is-dragging img { pointer-events: none; }
 .track {
   display: flex; gap: clamp(20px, 3.4vw, 60px); width: max-content;
   padding-inline: var(--gutter);
   background: linear-gradient(var(--line), var(--line)) 0 var(--plate-h) / 100% 1px no-repeat;
 }
-.plate { flex: none; display: grid; grid-template-rows: var(--plate-h) auto; min-width: 10.5rem; }
+.plate { flex: none; display: grid; grid-template-rows: var(--plate-h) auto; min-width: 10.5rem; scroll-snap-align: start; }
 .plate button { align-self: end; justify-self: start; display: block; cursor: zoom-in; }
 .plate img {
   display: block;
@@ -115,10 +118,10 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
 }
 .plate.photo img { mix-blend-mode: normal; }
 .plate figcaption { width: 0; min-width: 100%; display: flex; gap: 10px; padding-top: 10px; color: var(--muted); font-size: var(--fs-small); line-height: 1.4; }
-.plate figcaption b { flex: none; font-weight: 300; color: var(--ink); font-variant-numeric: tabular-nums; }
+.plate figcaption b { flex: none; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
 .plate figcaption i { font-style: normal; color: var(--ink); }
 .ctrl { display: flex; justify-content: flex-end; align-items: center; gap: 18px; padding-top: 14px; color: var(--muted); font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
-.ctrl button { padding: 6px 4px; color: var(--ink); }
+.ctrl button { padding: 10px; min-width: 44px; min-height: 44px; color: var(--ink); }
 .ctrl button:disabled { color: var(--faint); cursor: default; }
 
 /* Texto bajo la mesa */
@@ -134,13 +137,13 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
 .tool > * { grid-column: 2; min-width: 0; }
 .tool-head { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); margin-bottom: 8px; }
 .tool-head .num { grid-row: 1 / span 2; color: var(--muted); font-size: var(--fs-small); padding-top: .55em; }
-.tool-head h2 { color: var(--ink); font-weight: 300; font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; }
+.tool-head h2 { color: var(--ink); font-weight: 400; font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; }
 .tool-head p { grid-column: 2; max-width: 60ch; margin-top: 8px; }
 .tool-frame { position: relative; grid-column: 1 / -1; margin-inline: calc(var(--gutter) * -1); }
 .tool-canvas { display: block; width: 100%; height: clamp(320px, 64vh, 660px); cursor: grab; }
 .tool-canvas.is-dragging { cursor: grabbing; }
 .tool-canvas:focus-visible { outline-offset: -4px; }
-.tool-labels span { position: absolute; left: 0; top: 0; padding: 2px 6px; background: var(--ground); color: var(--ink); font-size: 12px; line-height: 1.3; white-space: nowrap; pointer-events: none; }
+.tool-labels span { position: absolute; left: 0; top: 0; padding: 2px 6px; background: var(--ground); color: var(--ink); font-size: var(--fs-small); line-height: 1.3; white-space: nowrap; pointer-events: none; }
 .tool-ctrl { display: flex; flex-wrap: wrap; align-items: end; gap: 16px clamp(20px, 3vw, 40px); }
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 12rem; color: var(--muted); font-size: var(--fs-small); }
 .field output { color: var(--ink); font-variant-numeric: tabular-nums; }
@@ -152,7 +155,7 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
 .btn:hover { background: var(--ink); color: var(--ground); }
 .tool-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px clamp(16px, 3vw, 40px); max-width: 860px; }
 .tool-stats div { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; border-top: 1px solid var(--line); font-size: var(--fs-small); color: var(--muted); }
-.tool-stats b { font-weight: 300; color: var(--ink); font-variant-numeric: tabular-nums; font-size: var(--fs-text); }
+.tool-stats b { font-weight: 400; color: var(--ink); font-variant-numeric: tabular-nums; font-size: var(--fs-text); }
 .tool-read { color: var(--ink); font-variant-numeric: tabular-nums; }
 .tool-note { max-width: 70ch; color: var(--muted); font-size: var(--fs-small); }
 
@@ -163,10 +166,16 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
 .post-nav .next { text-align: right; }
 .post-nav a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
 .post-nav a[hidden] { display: none; }
+.post-nav:not(:has(a:not([hidden]))) { display: none; }
 
 /* Pie */
-.foot { padding-block: 24px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: var(--fs-small); }
+.foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); row-gap: 40px; padding-block: 40px 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: var(--fs-small); }
 .foot p { max-width: 72ch; }
+.foot-name { color: var(--ink); font-size: var(--fs-title); line-height: 1.25; letter-spacing: -.015em; }
+.foot-identity > p + p { margin-top: 8px; }
+.foot-heading { color: var(--ink); font-size: var(--fs-lead); font-family: var(--serif); margin-bottom: 12px; }
+.foot-bottom { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: 20px; padding-top: 20px; border-top: 1px solid var(--line); }
+.foot-bottom button { flex: none; color: var(--ink); padding-block: 10px; }
 
 /* Lámina ampliada */
 dialog.zoom { width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--ground); color: var(--text); }
@@ -178,12 +187,21 @@ dialog.zoom::backdrop { background: var(--ground); }
 .zoom-stage img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: contain; mix-blend-mode: multiply; }
 .zoom-stage img.photo { mix-blend-mode: normal; }
 .zoom-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; font-size: var(--fs-small); color: var(--muted); }
-.zoom-foot p b { font-weight: 300; color: var(--ink); margin-right: 10px; font-variant-numeric: tabular-nums; }
+.zoom-foot p b { font-weight: 400; color: var(--ink); margin-right: 10px; font-variant-numeric: tabular-nums; }
 .zoom-foot p i { font-style: normal; color: var(--ink); }
 .zoom-nav { flex: none; display: flex; gap: 18px; }
 
 /* Volver: un botón redondo con flecha */
-.back { padding-top: clamp(16px, 3vh, 28px); }
+.back { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 20px; height: var(--header-h); padding-block: 12px; border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .96); }
+@supports ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
+  .back { background: rgba(255, 255, 255, .78); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+}
+.tool, .chapter, .facts, .p-body { scroll-margin-top: calc(var(--header-h) + 16px); }
+.header-who { font-weight: 600; color: var(--ink); text-align: left; }
+.header-nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 40px); font-size: var(--fs-small); }
+.header-nav button { padding-block: 12px; color: var(--ink); white-space: nowrap; }
+.header-nav button:hover, .foot-bottom button:hover { text-decoration: underline; text-underline-offset: .22em; }
+.back-label { color: var(--muted); font-size: var(--fs-small); letter-spacing: .03em; text-align: right; }
 .back-btn { display: inline-grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--ink); border-radius: 50%; color: var(--ink); text-decoration: none; transition: background .2s ease, color .2s ease; }
 .back-btn:hover { background: var(--ink); color: var(--ground); }
 .back-btn svg { transition: transform .2s ease; }
@@ -191,7 +209,7 @@ dialog.zoom::backdrop { background: var(--ground); }
 
 /* Cabecera de nota: frase, entrada y botón a la herramienta */
 .p-claim { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(16px, 3vh, 28px); }
-.p-lead { max-width: 52ch; color: var(--ink); font-size: clamp(17px, 1.4vw, 20px); line-height: 1.45; }
+.p-lead { max-width: 50ch; color: var(--text); font: 400 var(--fs-lead)/1.5 var(--serif); }
 .cta { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; background: var(--ink); color: var(--ground); font-size: var(--fs-text); letter-spacing: .01em; }
 .cta:hover { background: #000; }
 .cta span { display: inline-block; transition: transform .2s ease; }
@@ -202,20 +220,28 @@ dialog.zoom::backdrop { background: var(--ground); }
 /* Capítulos de la nota, a la manera de una ficha de investigación */
 .chapter { padding-top: clamp(48px, 9vh, 104px); }
 .ch-text { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); }
-.ch-text h2 { color: var(--ink); font-weight: 300; font-size: var(--fs-title); line-height: 1.15; letter-spacing: -.015em; }
-.ch-body { display: flex; flex-direction: column; gap: 12px; max-width: 62ch; }
+.ch-text h2 { padding-top: 16px; border-top: 1px solid var(--line); color: var(--ink); font-weight: 600; font-size: var(--fs-title); line-height: 1.25; letter-spacing: -.015em; }
+.ch-body { display: flex; flex-direction: column; gap: 14px; max-width: 62ch; padding-top: 16px; border-top: 1px solid var(--line); }
 .chapter .rail { margin-top: clamp(24px, 4vh, 48px); }
 .facts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); column-gap: clamp(16px, 3vw, 56px); padding-block: clamp(56px, 10vh, 112px) clamp(48px, 9vh, 96px); }
 .facts dl { grid-column: 2; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px clamp(16px, 3vw, 40px); max-width: 1100px; }
 .facts dl div { padding-top: 8px; border-top: 1px solid var(--line); }
-.facts dt { color: var(--muted); font-size: var(--fs-small); }
+.facts dt { color: var(--muted); font-size: var(--fs-small); margin-bottom: 6px; }
 .facts dd { margin: 2px 0 0; color: var(--ink); }
 .facts .links { grid-column: 2; margin-top: 24px; }
 .tool { background: linear-gradient(var(--line), var(--line)) top / 100% 1px no-repeat; }
-.tool-head h2 { font-size: var(--fs-display); line-height: 1.04; letter-spacing: -.025em; }
+.tool-head h2 { font-weight: 600; font-size: var(--fs-title); line-height: 1.25; letter-spacing: -.015em; }
 
 @media (max-width: 860px) {
+  :root { --header-h: 64px; }
+  .back-btn { width: 40px; height: 40px; }
+  .header-nav .back-label { display: none; }
+  .header-who { font-size: var(--fs-small); }
+  .back { gap: 12px; }
+  .foot { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+  .foot-bottom { flex-wrap: wrap; }
   .ch-text, .facts { grid-template-columns: minmax(0, 1fr); row-gap: 12px; }
+  .ch-body { padding-top: 0; border-top: 0; }
   .facts dl, .facts .links { grid-column: 1; grid-template-columns: minmax(0, 1fr); }
   .p-head, .p-body, .tool, .tool-head { grid-template-columns: minmax(0, 1fr); row-gap: 16px; }
   .p-body .cols { grid-column: 1; grid-template-columns: minmax(0, 1fr); max-width: 60ch; }
@@ -229,7 +255,7 @@ dialog.zoom::backdrop { background: var(--ground); }
   .e-thumb { grid-column: 3; grid-row: 1 / span 3; width: 88px; height: 70px; }
 }
 
-.p-q { color: var(--claim); font-size: var(--fs-text); letter-spacing: .01em; margin-bottom: calc(-1 * clamp(8px, 2vh, 18px)); }
+.p-q { color: var(--muted); font: italic 400 var(--fs-lead)/1.4 var(--serif); margin-bottom: calc(-1 * clamp(8px, 2vh, 18px)); }
 
 .seg { display: inline-flex; border: 1px solid var(--ink); }
 .seg button { padding: 7px 14px; color: var(--ink); font-size: var(--fs-small); }
@@ -276,7 +302,7 @@ dialog.zoom::backdrop { background: var(--ground); }
 .tool[data-tool="synergism"] .tool-stats { display: flex; flex-direction: column; gap: 26px; min-width: 210px; max-width: none; padding-top: 28px; }
 .tool[data-tool="synergism"] .tool-stats div { display: flex; flex-direction: column; gap: 3px; padding-top: 10px; border-top: 1px solid var(--line); }
 .tool[data-tool="synergism"] .tool-stats span { color: var(--muted); font-size: var(--fs-text); }
-.tool[data-tool="synergism"] .tool-stats b { color: var(--ink); font-weight: 600; font-size: clamp(24px, 2.2vw, 32px); line-height: 1.12; letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tool[data-tool="synergism"] .tool-stats b { color: var(--ink); font-weight: 600; font-size: var(--fs-title); line-height: 1.12; letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tool[data-tool="synergism"] .tool-note { max-width: 52ch; }
 
 /* Model across the page, tall; zones, sun map and readout below it in the text column. */
@@ -295,14 +321,13 @@ dialog.zoom::backdrop { background: var(--ground); }
   .tool[data-tool="synergism"] .tool-stats div { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; align-items: baseline; padding-block: 10px; }
   .tool[data-tool="synergism"] .tool-stats span { grid-column: 1 / -1; }
   .tool[data-tool="synergism"] .tool-stats span { font-size: var(--fs-small); }
-  .tool[data-tool="synergism"] .tool-stats b { font-size: 22px; }
 }
 .sw-dash { display: inline-block; width: 18px; height: 0; margin-right: 7px; vertical-align: 3px; border-top: 2px dashed var(--ink); }
 
 </style>
 </head>
 <body>
-<main>
+<main id="research-top">
 <section class="home" data-view="" data-title="IAAC research notes" hidden>
   <div class="intro wrap">
     <h1>Computation lets us ask questions that a single drawing cannot answer.</h1>
@@ -334,7 +359,7 @@ dialog.zoom::backdrop { background: var(--ground); }
 </section>
 <!-- ───────────── 01 SYneRgism ───────────── -->
 <article class="post" data-view="synergism" data-title="SYneRgism · Research notes">
-  <div class="back wrap"><a class="back-btn" href="#" aria-label="Back to all notes"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="back wrap"><button type="button" class="header-who" data-scroll-target="research-top">Alberto Carro Novo</button><nav class="header-nav" aria-label="Note navigation"><span class="back-label">Research notes</span><button type="button" data-scroll-target="tool-synergism">3D tool ↓</button><button type="button" data-scroll-target="credits-synergism">Credits</button></nav></div>
   <header class="p-head wrap">
     <div class="p-id">
       <span class="num" aria-hidden="true">01</span>
@@ -420,7 +445,7 @@ dialog.zoom::backdrop { background: var(--ground); }
   <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 09</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
   </div>
   </section>
-  <div class="facts wrap"><dl><div><dt>Year</dt><dd>2022–23</dd></div><div><dt>Place</dt><dd>Damascus, Syria</dd></div><div><dt>Programme</dt><dd>IAAC, MaCAD · ACESD Studio</dd></div><div><dt>Team</dt><dd>Jana Semaan, Raghad Hammour and Alberto Carro Novo</dd></div><div><dt>Faculty</dt><dd>Rodrigo Aguirre, Irene Martin and Amanda Gioia</dd></div><div><dt>My role</dt><dd>Programming and organising the formation of the massing through climatic computational rules</dd></div></dl><nav class="links" aria-label="Links for SYneRgism"><a href="https://blog.iaac.net/synergism/" target="_blank" rel="noopener noreferrer">Full project on IAAC Blog ↗</a></nav></div>
+  <div class="facts wrap" id="credits-synergism"><dl><div><dt>Year</dt><dd>2022–23</dd></div><div><dt>Place</dt><dd>Damascus, Syria</dd></div><div><dt>Programme</dt><dd>IAAC, MaCAD · ACESD Studio</dd></div><div><dt>Team</dt><dd>Jana Semaan, Raghad Hammour and Alberto Carro Novo</dd></div><div><dt>Faculty</dt><dd>Rodrigo Aguirre, Irene Martin and Amanda Gioia</dd></div><div><dt>My role</dt><dd>Programming and organising the formation of the massing through climatic computational rules</dd></div></dl><nav class="links" aria-label="Links for SYneRgism"><a href="https://blog.iaac.net/synergism/" target="_blank" rel="noopener noreferrer">Full project on IAAC Blog ↗</a></nav></div>
   <section class="tool wrap" data-tool="synergism" data-src="data/syn-context.json" aria-labelledby="tool-synergism">
     <div class="tool-head">
       <span class="num">01 · Try it</span>
@@ -450,7 +475,7 @@ dialog.zoom::backdrop { background: var(--ground); }
 </article>
 <!-- ───────────── 02 EASE ───────────── -->
 <article class="post" data-view="ease" data-title="EASE · Research notes" hidden>
-  <div class="back wrap"><a class="back-btn" href="#" aria-label="Back to all notes"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="back wrap"><button type="button" class="header-who" data-scroll-target="research-top">Alberto Carro Novo</button><nav class="header-nav" aria-label="Note navigation"><span class="back-label">Research notes</span><button type="button" data-scroll-target="tool-ease">3D tool ↓</button><button type="button" data-scroll-target="credits-ease">Credits</button></nav></div>
   <header class="p-head wrap">
     <div class="p-id">
       <span class="num" aria-hidden="true">02</span>
@@ -476,7 +501,7 @@ dialog.zoom::backdrop { background: var(--ground); }
   </div>
   <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 05</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
   </div>
-  <div class="p-body wrap">
+  <div class="p-body wrap" id="credits-ease">
     <div class="cols">
       <p>EASE studies how a sequence of trips can be read as a network of places, times and recurring relations. Maps and graphs make it possible to explore the structure of those habits and to propose models of next destinations.</p><p>Predictive capacity remains a hypothesis that needs independent validation. The architectural interest lies in observing the city through use, alongside its physical form, while keeping explicit the limits of what the data can tell.</p>
       <div>
@@ -508,7 +533,7 @@ dialog.zoom::backdrop { background: var(--ground); }
 </article>
 <!-- ───────────── 03 Latent Studio ───────────── -->
 <article class="post" data-view="latent-studio" data-title="Latent Studio · Research notes" hidden>
-  <div class="back wrap"><a class="back-btn" href="#" aria-label="Back to all notes"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  <div class="back wrap"><button type="button" class="header-who" data-scroll-target="research-top">Alberto Carro Novo</button><nav class="header-nav" aria-label="Note navigation"><span class="back-label">Research notes</span><button type="button" data-scroll-target="tool-latent-studio">3D tool ↓</button><button type="button" data-scroll-target="credits-latent-studio">Credits</button></nav></div>
   <header class="p-head wrap">
     <div class="p-id">
       <span class="num" aria-hidden="true">03</span>
@@ -534,7 +559,7 @@ dialog.zoom::backdrop { background: var(--ground); }
   </div>
   <div class="ctrl wrap"><button type="button" data-dir="-1" aria-label="Previous plate">←</button><span class="count">01 / 05</span><button type="button" data-dir="1" aria-label="Next plate">→</button></div>
   </div>
-  <div class="p-body wrap">
+  <div class="p-body wrap" id="credits-latent-studio">
     <div class="cols">
       <p>Latent Studio explores the territory between two known forms: a catalogue of architectural volumes that lets you walk the transitions from one configuration to another. The research trains a 3D generative network on voxelised models and makes its latent space visible.</p><p>What matters is the moment before choosing a solution: recognising families, discovering variations and deciding what deserves to be developed. The catalogue widens the field of testing; architectural judgement guides the choice.</p>
       <div>
@@ -567,8 +592,9 @@ dialog.zoom::backdrop { background: var(--ground); }
 </article>
 </main>
 <footer class="foot wrap">
-  <div class="top"><a class="who" href="#">Alberto Carro Novo</a><span class="when">Master research · IAAC MaCAD 2022–23</span></div>
-  <p>Academic projects developed at IAAC, Master in Advanced Computation for Architecture and Design (MaCAD), 2022–23. Images belong to the original projects; full credits on IAAC Blog.</p>
+  <div class="foot-identity"><p class="foot-name">Alberto Carro Novo</p><p>Research notes</p></div>
+  <div class="foot-context"><p class="foot-heading">Architecture through computation.</p><p>Academic projects developed at IAAC, Master in Advanced Computation for Architecture and Design (MaCAD), 2022–23. Revisited in 2026 through drawings and interactive tools.</p></div>
+  <div class="foot-bottom"><p>Images belong to the original projects. Full project credits and sources are linked in each note.</p><button type="button" data-scroll-target="research-top">Back to top ↑</button></div>
 </footer>
 
 <dialog class="zoom" aria-label="Enlarged plate">

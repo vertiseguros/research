@@ -57,6 +57,12 @@
   });
 
   /* ── Mesas de láminas ──────────────────────────────────────── */
+  document.querySelectorAll('[data-scroll-target]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var target = document.getElementById(button.dataset.scrollTarget);
+      if (target) (target.closest('.tool') || target).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
   document.querySelectorAll('[data-goto]').forEach(function (b) {
     b.addEventListener('click', function () {
       var el = document.getElementById(b.dataset.goto);
